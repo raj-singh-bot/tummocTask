@@ -1,14 +1,12 @@
 const express = require("express");
 const login = express.Router();
 
-//Passport file for login/register
-const passport = require("../../Auth");
+const passport = require("../../AuthGoogle/");
 
-//Login passport authentication
-login.post("/login", function (req, res) {
-  passport.authenticate("local-login", function (error, user, info) {
+login.post("/signin", function (req, res) {
+  passport.authenticate("google-signin", function (error, user, info) {
     if (error) {
-      return res.status(404).json({
+      return res.status(500).json({
         message: error || "Something happend",
         error: error.message || "Server error",
       });
@@ -16,7 +14,7 @@ login.post("/login", function (req, res) {
 
     req.logIn(user, function (error, data) {
       if (error) {
-        return res.status(404).json({
+        return res.status(500).json({
           message: error || "Something happend",
           error: error.message || "Server error",
         });

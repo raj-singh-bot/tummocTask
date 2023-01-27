@@ -6,7 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const userLogin = createAsyncThunk("user/userLogin", async (data) => {
+export const userLogin = createAsyncThunk("user/userLogin", async (data, {rejectWithValue}) => {
   console.log(data);
   try {
     const response = await axios.post(`http://localhost:8000/auth/login`, data);
@@ -14,7 +14,7 @@ export const userLogin = createAsyncThunk("user/userLogin", async (data) => {
 
     return response.data;
   } catch (err) {
-    console.error(err);
+    throw rejectWithValue(err.response.data.message)
   }
 });
 
@@ -33,6 +33,7 @@ const AuthSlice = createSlice({
     user: {},
     authenticate: false,
     status: "idle",
+    message: "",
   },
   reducers: {},
   extraReducers(builder) {
@@ -47,11 +48,14 @@ const AuthSlice = createSlice({
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.status = "rejected";
+        state.message = action.payload
       })
       .addCase(userLoggedOut, (state, action) => {
         state.authenticate = false;
+        // return initialState
+        // ...initState
       });
-  },
+  }
 });
 
 export const getAuth = (state) => state.auth;

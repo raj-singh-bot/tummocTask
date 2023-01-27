@@ -19,9 +19,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../../store/AuthSlice";
-import SigninGoogle from "../../components/auth/SigninGoogle";
+import SignupGoogle from "../../components/auth/SignupGoogle";
 
-function Login() {
+function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast({
     position: "top",
@@ -39,17 +39,21 @@ function Login() {
       .required("Please enter your email address")
       .email("Invalid email address"),
     password: Yup.string().required("Please enter your password"),
+    first_name: Yup.string().required("Please enter your first name"),
+    last_name: Yup.string().required("Please enter your last name")
   });
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     console.log(values);
 
-    dispatch(userLogin(values));
+    // dispatch(userLogin(values));
     setIsSubmitting(false);
   };
   const defaultValues = {
     email: "",
     password: "",
+    first_name: "",
+    last_name: "",
   };
 
   return (
@@ -68,7 +72,7 @@ function Login() {
             <Text>
               <br></br>
             </Text>
-            <Heading>Sign In to Your Account</Heading>
+            <Heading>Sign Up to Your Account</Heading>
             <Text>
               <br></br>
             </Text>
@@ -81,13 +85,37 @@ function Login() {
             >
               {({ setFieldValue }) => (
                 <Form>
-                  <p style={{ color: "red" }}>{auth.message}</p>
+                    <p style={{color: 'red'}}>{auth.message}</p>
                   <div className="row">
+                  <FormControl mt={4} isRequired>
+                      <FormLabel>Enter FirstName </FormLabel>
+                      <Field
+                        name="first_name"
+                        placeholder="Enter Your First Name"
+                        type="text"
+                        className={style.formInput}
+                      />
+                      <p className={style.textDanger}>
+                        <ErrorMessage name="first_name" />
+                      </p>
+                    </FormControl>
+                    <FormControl mt={4} isRequired>
+                      <FormLabel>Enter LastName </FormLabel>
+                      <Field
+                        name="last_name"
+                        placeholder="Enter Your Last Name"
+                        type="text"
+                        className={style.formInput}
+                      />
+                      <p className={style.textDanger}>
+                        <ErrorMessage name="last_name" />
+                      </p>
+                    </FormControl>
                     <FormControl mt={4} isRequired>
                       <FormLabel>Enter Username </FormLabel>
                       <Field
                         name="email"
-                        placeholder="Enter Your First Name"
+                        placeholder="Enter Your User Name"
                         type="text"
                         className={style.formInput}
                       />
@@ -108,7 +136,8 @@ function Login() {
                       </p>
                     </FormControl>
                   </div>
-                  {isSubmitting ? (
+                  {
+                  isSubmitting ? (
                     <Flex
                       bg="white.500"
                       color="gery.500"
@@ -133,19 +162,11 @@ function Login() {
                       mt={4}
                       type="submit"
                     >
-                      Sign In
+                      Sign Up
                     </Button>
                   )}
-                  <SigninGoogle />
-                  <p style={{ fontSize: "12px", marginTop: "10px" }}>
-                    Don't have an Account{" "}
-                    <Link
-                      style={{ fontSize: "14px", borderBottom: "1px solid" }}
-                      to={"/register"}
-                    >
-                      Sign Up
-                    </Link>
-                  </p>
+                  <SignupGoogle/>
+                  <p style={{fontSize: '12px', marginTop: '10px'}}>Already have an Account <Link style={{fontSize: '14px', borderBottom: '1px solid'}}  to={'/login'}>Sign In</Link></p>
                 </Form>
               )}
             </Formik>
@@ -156,4 +177,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

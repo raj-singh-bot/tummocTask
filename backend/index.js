@@ -6,7 +6,8 @@ const connectDB = require("./config/db");
 const Authentication = require("./routes/AuthRoute");
 const passport = require("./Auth");
 const session = require("express-session");
-
+const authGoogle = require('./routes/GoogleAuthRoute')
+ 
 connectDB();
 app.use(
   session({
@@ -20,6 +21,7 @@ app.use(passport.session());
 app.use(cors());
 app.use(express.json());
 app.use("/auth", Authentication);
+app.use('/api', authGoogle)
 app.get("/", (req, res) => {
   res.send("hello");
 });

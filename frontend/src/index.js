@@ -7,10 +7,12 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import store from "./store/store";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
+    <GoogleOAuthProvider clientId="596870114935-pone0ehugaqkjbk41a2enhs4jdsl5bke.apps.googleusercontent.com">
     <Provider store={store}>
       <ChakraProvider>
         <BrowserRouter>
@@ -18,6 +20,7 @@ root.render(
         </BrowserRouter>
       </ChakraProvider>
     </Provider>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
 
