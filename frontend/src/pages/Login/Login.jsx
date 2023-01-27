@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -17,47 +17,33 @@ import style from "./login.module.css";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogin } from "../../store/AuthSlice";
 
 function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast({
     position: "top",
   });
+  const dispatch = useDispatch();
   let navigate = useNavigate();
-  //   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
 
+  if (auth.authenticate == true) {
+    navigate("/");
+  }
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .required("Please enter your email address")
       .email("Invalid email address"),
     password: Yup.string().required("Please enter your password"),
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-    //   "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    // ),
   });
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     console.log(values);
 
-    try {
-      const res = await axios.post("http://localhost:8000/auth/login", {
-        email: values.email,
-        password: values.password,
-      });
-      console.log(res.data);
-      localStorage.setItem("isAuthenticated", true);
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      toast({
-        description: `${error.response.data.error}`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-
+    dispatch(userLogin(values));
     setIsSubmitting(false);
   };
   const defaultValues = {

@@ -5,7 +5,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import Home from "./pages/Home/Home";
 
 function App() {
-  const hasJWT = localStorage.getItem("isAuthenticated") ? true : false;
+  const hasJWT = localStorage.getItem("isAuthenticate") ? true : false;
   return (
     <>
       <Routes>
