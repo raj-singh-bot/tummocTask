@@ -8,6 +8,7 @@ const passport = require("./Auth");
 const session = require("express-session");
 const authGoogle = require("./routes/GoogleAuthRoute");
 const UserDetail = require("./models/userDetails");
+const User = require("./models/userModel");
 
 connectDB();
 app.use(
@@ -48,6 +49,23 @@ app.get("/", (req, res) => {
       if (err) return res.status(400).json({ err });
       res.json(data);
     });
+});
+
+//aggregation
+app.get("/aggregation", (req, res) => {
+  UserDetail.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "data",
+      },
+    },
+  ]).exec(function (err, data) {
+    if (err) return res.status(400).json(err.message);
+    res.json(data);
+  });
 });
 
 const PORT = process.env.PORT || 8000;
